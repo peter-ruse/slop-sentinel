@@ -1,0 +1,1 @@
+Computes "slop" metrics such as Lexical Diversity and Cyclotomic Complexity
