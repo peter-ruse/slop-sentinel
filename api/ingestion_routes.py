@@ -2,8 +2,8 @@ from fastapi import APIRouter, Query
 from fastapi.responses import StreamingResponse
 
 from api.schemas import RepoRequest
-from core.models import Provider
 from services.factory import RepoServiceFactory
+from services.models import Provider
 
 ingestion_router = APIRouter(tags=["ingest"])
 

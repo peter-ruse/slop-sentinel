@@ -1,11 +1,11 @@
 import ast
 from typing import Iterable
 
-from core.ports import MetricVisitor
+from core.analysis.base import BaseVisitor
 
 
 class RepoAnalyzer:
-    def __init__(self, visitors: list[MetricVisitor]):
+    def __init__(self, visitors: list[BaseVisitor]):
         self.visitors = visitors
 
     def consolidate_results(self, trees: Iterable[tuple[str, ast.AST]]):

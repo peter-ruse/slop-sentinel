@@ -1,20 +1,18 @@
 import ast
 
+from core.analysis.base import BaseVisitor
 from core.analysis.cyclomatic_complexity.models import (
     CyclomaticComplexity,
     FunctionComplexity,
 )
-from core.models import MetricName
+from core.analysis.models import MetricName
 
 
-class CyclomaticComplexityVisitor(ast.NodeVisitor):
+class CyclomaticComplexityVisitor(BaseVisitor):
     metric_name = MetricName.CYCLOMATIC_COMPLEXITY
 
     def __init__(self):
         self.complexities: list[FunctionComplexity] = []
-
-    def update_module_fqn(self, module_fqn: str):
-        self.module_fqn = module_fqn
 
     def visit_FunctionDef(self, node: ast.FunctionDef):
         self._visit_function(node)

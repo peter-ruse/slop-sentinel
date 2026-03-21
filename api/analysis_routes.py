@@ -6,7 +6,6 @@ from core.analysis.cyclomatic_complexity.cyclomatic_complexity import (
 )
 from core.analysis.lexical_diversity.lexical_diversity import LexicalDiversityVisitor
 from core.analysis.repo_analyzer import RepoAnalyzer
-from core.models import Repo
 from core.parsing.python_asts import get_asts
 from services.factory import RepoServiceFactory
 

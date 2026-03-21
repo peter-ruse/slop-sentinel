@@ -3,9 +3,9 @@ from typing import Any
 from urllib.parse import urlparse
 
 from core.config import GitHubSettings
-from core.models import GitHubRepo, Provider, Repo
-from core.ports import RepoService
+from services.base import RepoService
 from services.github_service import GitHubService
+from services.models import GitHubRepo, Provider, Repo
 
 
 class RepoServiceFactory:
