@@ -25,7 +25,9 @@ class LexicalDiversityVisitor(BaseVisitor):
 
     def compute_results(self) -> LexicalDiversity:
         if not self.identifiers:
-            return LexicalDiversity(0, 0, 0.0)
+            return LexicalDiversity(
+                unique_identifiers=0, total_identifiers=0, score=None
+            )
 
         unique_identifiers = len(set(self.identifiers))
         total_identifiers = len(self.identifiers)

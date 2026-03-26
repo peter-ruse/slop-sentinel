@@ -14,7 +14,7 @@ class RepoAnalyzer:
                 visitor.update_module_fqn(module_fqn)
                 visitor.visit(tree)
 
-        results = dict()
+        results = {}
         for visitor in self.visitors:
             results[visitor.metric_name] = visitor.compute_results()
 

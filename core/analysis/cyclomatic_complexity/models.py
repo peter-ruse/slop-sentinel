@@ -9,7 +9,7 @@ class FunctionComplexity:
 
 @dataclass
 class CyclomaticComplexity:
-    mean: float
-    max_complexity: int
+    mean: float | None
+    max_complexity: int | None
     total_functions: int
     worst: list[FunctionComplexity]
