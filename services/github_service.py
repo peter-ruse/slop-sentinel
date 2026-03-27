@@ -3,8 +3,8 @@ from io import BytesIO
 
 import httpx
 
-from core.models import GitHubRepo
-from core.ports import RepoService
+from services.base import RepoService
+from services.models import GitHubRepo
 
 
 class GitHubService(RepoService[GitHubRepo]):
@@ -32,7 +32,12 @@ class GitHubService(RepoService[GitHubRepo]):
         response = await client.get(url="/search/repositories", params=params)
         response.raise_for_status()
         return [
-            GitHubRepo(url=item["url"], owner=item["owner"]["login"], name=item["name"])
+            GitHubRepo(
+                url=item["url"],
+                owner=item["owner"]["login"],
+                name=item["name"],
+                star_count=item["stargazers_count"],
+            )
             for item in response.json().get("items", [])
         ]
 

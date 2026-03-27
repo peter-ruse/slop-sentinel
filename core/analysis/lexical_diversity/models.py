@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class LexicalDiversity:
     unique_identifiers: int
     total_identifiers: int
-    score: float
+    score: float | None

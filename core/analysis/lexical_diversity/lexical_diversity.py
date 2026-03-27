@@ -1,17 +1,15 @@
 import ast
 
+from core.analysis.base import BaseVisitor
 from core.analysis.lexical_diversity.models import LexicalDiversity
-from core.models import MetricName
+from core.analysis.models import MetricName
 
 
-class LexicalDiversityVisitor(ast.NodeVisitor):
+class LexicalDiversityVisitor(BaseVisitor):
     metric_name = MetricName.LEXICAL_DIVERSITY
 
     def __init__(self):
         self.identifiers = []
-
-    def update_module_fqn(self, module_fqn: str):
-        self.module_fqn = module_fqn
 
     def visit_Name(self, node: ast.Name):
         self.identifiers.append(node.id)
@@ -27,7 +25,9 @@ class LexicalDiversityVisitor(ast.NodeVisitor):
 
     def compute_results(self) -> LexicalDiversity:
         if not self.identifiers:
-            return LexicalDiversity(0, 0, 0.0)
+            return LexicalDiversity(
+                unique_identifiers=0, total_identifiers=0, score=None
+            )
 
         unique_identifiers = len(set(self.identifiers))
         total_identifiers = len(self.identifiers)

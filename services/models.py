@@ -14,6 +14,7 @@ class Repo:
     url: str
     owner: str
     name: str
+    star_count: int | None = None
 
 
 @dataclass(frozen=True)
@@ -32,8 +33,3 @@ class GitHubRepo(Repo):
         owner, name, *_ = path_parts
         name = name.removesuffix(".git")
         return cls(url=f"{api_base_url}/repos/{owner}/{name}", owner=owner, name=name)
-
-
-class MetricName(StrEnum):
-    LEXICAL_DIVERSITY = "lexical_diversity"
-    CYCLOMATIC_COMPLEXITY = "cyclomatic_complexity"
