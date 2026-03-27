@@ -10,7 +10,7 @@ This is a FastAPI project that computes "slop" metrics for public Python project
 - Structural nesting is a measure of the amount of nesting, due to statements of type `if`, `for`, `async for`, `while`, `try`, `with`, `async with`. Here we compute max nesting and average nesting across the codebase. The smaller the score, the better.
 
 ### Lexical Diversity
-- The lexical diversity of a codebase is the number of unique idenfiers (variables, functions, classes) divided by the total number of identifiers. Scores between 0.3 and 0.7 are ideal. Low values indicate extreme redundancy, while high values indicate inconsistent naming conventions.
+- The lexical diversity of a codebase is the number of unique identifiers (variables, functions, classes) divided by the total number of identifiers. Scores between 0.3 and 0.7 are ideal. Low values indicate extreme redundancy, while high values indicate inconsistent naming conventions.
 
 ## Python's ast module
 To better understand the code, note
