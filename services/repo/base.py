@@ -1,7 +1,7 @@
 from io import BytesIO
 from typing import Protocol
 
-from services.models import Repo
+from services.repo.models import Repo
 
 
 class RepoService[T: Repo](Protocol):

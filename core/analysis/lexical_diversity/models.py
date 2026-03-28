@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class LexicalDiversity:
+class LexicalDiversity(BaseModel):
     unique_identifiers: int
     total_identifiers: int
     score: float | None

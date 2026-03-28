@@ -34,15 +34,15 @@ class CyclomaticComplexityVisitor(BaseVisitor):
     def compute_results(self):
         if not self.complexities:
             return CyclomaticComplexity(
-                mean=None, max_complexity=None, total_functions=0, worst=[]
+                max=None, mean=None, total_functions=0, worst=[]
             )
 
         complexities = [c.complexity for c in self.complexities]
         worst = sorted(self.complexities, key=lambda c: -c.complexity)[:10]
 
         return CyclomaticComplexity(
+            max=max(complexities),
             mean=sum(complexities) / len(complexities),
-            max_complexity=max(complexities),
             total_functions=len(complexities),
             worst=worst,
         )

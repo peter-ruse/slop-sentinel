@@ -3,8 +3,8 @@ from io import BytesIO
 
 import httpx
 
-from services.base import RepoService
-from services.models import GitHubRepo
+from services.repo.base import RepoService
+from services.repo.models import GitHubRepo
 
 
 class GitHubService(RepoService[GitHubRepo]):

@@ -1,23 +1,22 @@
-import os
 from typing import Any
 from urllib.parse import urlparse
 
 from core.config import GitHubSettings
-from services.base import RepoService
-from services.github_service import GitHubService
-from services.models import GitHubRepo, Provider, Repo
+from services.repo.base import RepoService
+from services.repo.github_service import GitHubService
+from services.repo.models import GitHubRepo, Provider, Repo
 
 
 class RepoServiceFactory:
     _instances = {}
 
     @classmethod
-    def get_service_from_url(cls, web_url: str) -> tuple[RepoService[Any], Repo]:
-        domain = urlparse(web_url).netloc.lower().removeprefix("www.")
+    def get_service_from_url(cls, url: str) -> tuple[RepoService[Any], Repo]:
+        domain = urlparse(url).netloc.lower().removeprefix("www.")
         match domain:
             case "github.com":
                 settings = GitHubSettings()  # type: ignore
-                github_repo = GitHubRepo.from_web_url(web_url, settings.api_base_url)  # type: ignore
+                github_repo = GitHubRepo.from_web_url(url, settings.api_base_url)  # type: ignore
                 provider = Provider.GITHUB
                 if provider not in cls._instances:
                     cls._instances[provider] = GitHubService(

@@ -1,9 +1,11 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Query
 from fastapi.responses import StreamingResponse
 
-from api.schemas import RepoRequest
-from services.factory import RepoServiceFactory
-from services.models import Provider
+from api.models import RepoRequest
+from services.repo.factory import RepoServiceFactory
+from services.repo.models import Provider
 
 ingestion_router = APIRouter(tags=["ingest"])
 
@@ -22,16 +24,20 @@ async def download_repo(request: RepoRequest):
 
 @ingestion_router.get("/top_repos")
 async def get_top_repos(
-    limit: int = Query(
-        default=100,
-        ge=1,
-        le=10000,
-        description="Number of top Python repos to fetch",
-    ),
-    provider: Provider = Query(
-        default=Provider.GITHUB,
-        description="The version control provider you wish to query",
-    ),
+    limit: Annotated[
+        int,
+        Query(
+            ge=1,
+            le=1000,
+            description="Number of top Python repos to fetch",
+        ),
+    ] = 100,
+    provider: Annotated[
+        Provider,
+        Query(
+            description="The version control provider you wish to query",
+        ),
+    ] = Provider.GITHUB,
 ):
     service = RepoServiceFactory.get_service_from_provider(provider)
     top_repos = await service.get_top_repos(limit)

@@ -24,3 +24,17 @@ class GitHubSettings(BaseSettings):
     @property
     def raw_token(self):
         return self.token.get_secret_value()
+
+
+class RedisSettings(BaseSettings):
+    host: str = Field(default="localhost", validation_alias="REDIS_HOST")
+    port: int = Field(default=6379, validation_alias="REDIS_PORT")
+    db: int = Field(default=0, validation_alias="REDIS_DB")
+    password: SecretStr = Field(validation_alias="REDIS_PASSWORD")
+    cache_ttl: int = Field(default=86400, validation_alias="CACHE_TTL")
+
+    @property
+    def raw_password(self):
+        return self.password.get_secret_value()
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
