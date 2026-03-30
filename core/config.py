@@ -31,10 +31,15 @@ class RedisSettings(BaseSettings):
     port: int = Field(default=6379, validation_alias="REDIS_PORT")
     db: int = Field(default=0, validation_alias="REDIS_DB")
     password: SecretStr = Field(validation_alias="REDIS_PASSWORD")
-    cache_ttl: int = Field(default=86400, validation_alias="CACHE_TTL")
 
     @property
     def raw_password(self):
         return self.password.get_secret_value()
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class RedisCacheSettings(BaseSettings):
+    cache_ttl: int = Field(default=86400, validation_alias="CACHE_TTL")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")

@@ -8,7 +8,18 @@ from services.repo.models import GitHubRepo
 
 
 class GitHubService(RepoService[GitHubRepo]):
+    _instance = None
+    _initialized = False
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self, base_url: str, token: str, per_page: int, max_parallel: int):
+        if self.__class__._initialized:
+            return
+
         self.base_url = base_url
         self.per_page = per_page
         self.semaphore = asyncio.Semaphore(max_parallel)
@@ -16,6 +27,8 @@ class GitHubService(RepoService[GitHubRepo]):
             "Authorization": f"Bearer {token}",
             "Accept": "application/vnd.github+json",
         }
+
+        self.__class__._initialized = True
 
     async def _get_top_repos_by_page(
         self, client: httpx.AsyncClient, page: int
