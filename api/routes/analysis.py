@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -16,7 +17,9 @@ from services.caching.caching_service import CachingService
 from services.repo.base import RepoService
 from services.repo.models import Repo
 
-analysis_router = APIRouter(tags=["analyze"])
+logger = logging.getLogger(__name__)
+
+analysis_router = APIRouter(prefix="/analysis", tags=["analyze"])
 
 
 @analysis_router.post("/slop_metrics", dependencies=[Depends(rate_limit_check)])
@@ -25,21 +28,21 @@ async def get_slop_metrics(
     caching_service: Annotated[CachingService, Depends(get_caching_service)],
     repo_service: Annotated[tuple[RepoService, Repo], Depends(get_repo_service)],
 ) -> AnalysisResults:
-    cache_key = f"cache:{request.url}"
-    if cached_data := await caching_service.get(cache_key):  # type: ignore (request.url is in fact a string)
-        print(f"{cached_data = }")
-        return AnalysisResults.model_validate_json(cached_data)  # type: ignore (we know this will be a str because of how we set it)
+    logger.info(f"Running slop analysis on {request.url}...")
 
-    service, repo = repo_service
-    zip_buffer = await service.download_repo_zip(repo)
-    trees = get_asts(zip_buffer)
-    visitors = [
-        LexicalDiversityVisitor(),
-        CyclomaticComplexityVisitor(),
-        StructuralNestingVisitor(),
-    ]
-    repo_analyzer = RepoAnalyzer(visitors)
-    results = repo_analyzer.consolidate_results(trees)
-    results = AnalysisResults(results=results)
-    await caching_service.set(cache_key, results.model_dump_json())  # type: ignore
-    return results
+    async def produce_analysis() -> str:
+        service, repo = repo_service
+        zip_buffer = await service.download_repo_zip(repo)
+        trees = get_asts(zip_buffer)
+        visitors = [
+            LexicalDiversityVisitor(),
+            CyclomaticComplexityVisitor(),
+            StructuralNestingVisitor(),
+        ]
+        repo_analyzer = RepoAnalyzer(visitors)
+        results = repo_analyzer.consolidate_results(trees)
+        return AnalysisResults(results=results).model_dump_json()
+
+    result = await caching_service.get_or_set(key=request.url, func=produce_analysis)
+
+    return AnalysisResults.model_validate_json(result)

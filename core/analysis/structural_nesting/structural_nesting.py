@@ -1,7 +1,7 @@
 import ast
 
 from core.analysis.base import BaseVisitor
-from core.analysis.models import MetricName
+from core.analysis.enums import MetricName
 from core.analysis.structural_nesting.models import StructuralNesting
 
 

@@ -5,7 +5,7 @@ from core.analysis.cyclomatic_complexity.models import (
     CyclomaticComplexity,
     FunctionComplexity,
 )
-from core.analysis.models import MetricName
+from core.analysis.enums import MetricName
 
 
 class CyclomaticComplexityVisitor(BaseVisitor):

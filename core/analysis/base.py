@@ -1,7 +1,7 @@
 import ast
 from typing import Protocol
 
-from core.analysis.models import MetricName
+from core.analysis.enums import MetricName
 
 
 class VisitorProtocol(Protocol):

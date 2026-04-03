@@ -1,27 +1,22 @@
 from redis.asyncio import Redis
 
-from core.config import RedisSettings
+from core.config import redis_settings
+from utils.meta import SingletonMeta
 
 
-class RedisService:
-    _instance = None
-    _initialized = False
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
+class RedisService(metaclass=SingletonMeta):
     def __init__(self):
-        if self.__class__._initialized:
-            return
+        self._client = None
 
-        settings = RedisSettings()  # type: ignore
-        self.client = Redis(
-            host=settings.host,
-            port=settings.port,
-            db=settings.db,
-            password=settings.raw_password,
-        )
-
-        self.__class__._initialized = True
+    @property
+    def client(self):
+        if not self._client:
+            self._client = Redis(
+                host=redis_settings.host,
+                port=redis_settings.port,
+                db=redis_settings.db,
+                password=redis_settings.raw_password,
+                socket_timeout=redis_settings.socket_timeout,
+                socket_connect_timeout=redis_settings.socket_connect_timeout,
+            )
+        return self._client

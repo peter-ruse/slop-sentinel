@@ -2,38 +2,34 @@ import logging
 import time
 
 from services.redis_service import RedisService
+from utils.meta import SingletonMeta
 
 logger = logging.getLogger(__name__)
 
 
-class RateLimitingService:
-    _instance = None
-    _initialized = False
+class RateLimitingService(metaclass=SingletonMeta):
+    def __init__(self, prefix="rate-limit"):
+        self.redis_service = RedisService()
+        self.prefix = prefix
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+    @property
+    def client(self):
+        return self.redis_service.client
 
-    def __init__(self):
-        if self.__class__._initialized:
-            return
-
-        self.client = RedisService().client
-
-        self.__class__._initialized = True
+    def _make_full_key(self, key: str):
+        return f"{self.prefix}:{key}"
 
     async def is_rate_limited(self, key: str, limit: int, window: int) -> bool:
-        key = f"rate-limit:{key}"
+        full_key = self._make_full_key(key)
         pipeline = self.client.pipeline(transaction=True)
         now = time.time()
         window_start = now - window
 
         try:
-            pipeline.zremrangebyscore(key, 0, window_start)
-            pipeline.zadd(key, {str(now): now})
-            pipeline.zcard(key)
-            pipeline.expire(key, window + 1)
+            pipeline.zremrangebyscore(full_key, 0, window_start)
+            pipeline.zadd(full_key, {str(now): now})
+            pipeline.zcard(full_key)
+            pipeline.expire(full_key, window + 1)
 
             _, _, current_count, _ = await pipeline.execute()
 

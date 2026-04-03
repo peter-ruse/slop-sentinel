@@ -4,7 +4,7 @@ import zipfile
 from io import BytesIO
 from typing import Generator
 
-from utils.transforms import filepath_to_module_fqn
+from utils.path_utils import filepath_to_module_fqn
 
 logger = logging.getLogger(__name__)
 

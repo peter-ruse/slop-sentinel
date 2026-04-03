@@ -1,16 +1,17 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
 
+from api.dependencies import rate_limit_check
 from api.models import RepoRequest
+from services.repo.enums import Provider
 from services.repo.factory import RepoServiceFactory
-from services.repo.models import Provider
 
-ingestion_router = APIRouter(tags=["ingest"])
+ingestion_router = APIRouter(prefix="/repos", tags=["ingest"])
 
 
-@ingestion_router.post("/download")
+@ingestion_router.post("/download", dependencies=[Depends(rate_limit_check)])
 async def download_repo(request: RepoRequest):
     service, repo = RepoServiceFactory.get_service_from_url(request.url)  # type: ignore
     zip_buffer = await service.download_repo_zip(repo)
@@ -22,7 +23,7 @@ async def download_repo(request: RepoRequest):
     )
 
 
-@ingestion_router.get("/top_repos")
+@ingestion_router.get("/top_repos", dependencies=[Depends(rate_limit_check)])
 async def get_top_repos(
     limit: Annotated[
         int,
