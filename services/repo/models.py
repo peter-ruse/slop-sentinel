@@ -1,23 +1,15 @@
-from dataclasses import dataclass
-from enum import StrEnum
 from urllib.parse import urlparse
 
-
-class Provider(StrEnum):
-    GITHUB = "github"
-    BITBUCKET = "bitbucket"
-    GITLAB = "gitlab"
+from pydantic import BaseModel
 
 
-@dataclass(frozen=True)
-class Repo:
+class Repo(BaseModel):
     url: str
     owner: str
     name: str
     star_count: int | None = None
 
 
-@dataclass(frozen=True)
 class GitHubRepo(Repo):
     @property
     def zipball_url(self):

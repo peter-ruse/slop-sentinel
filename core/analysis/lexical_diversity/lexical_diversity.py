@@ -1,8 +1,8 @@
 import ast
 
 from core.analysis.base import BaseVisitor
+from core.analysis.enums import MetricName
 from core.analysis.lexical_diversity.models import LexicalDiversity
-from core.analysis.models import MetricName
 
 
 class LexicalDiversityVisitor(BaseVisitor):

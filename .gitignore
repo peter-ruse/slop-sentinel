@@ -27,6 +27,9 @@ logs/
 dags/.airflowignore
 .airflow_db_initialised
 
+# --- Database ---
+*.db
+
 # --- Docker ---
 docker-compose.override.yml
 .dockerignore
@@ -36,7 +39,7 @@ docker-compose.override.yml
 .idea/
 .DS_Store
 
-# --- Secret / Config ---
+# --- Secret/Config ---
 .env
 .secrets/
 *.pem

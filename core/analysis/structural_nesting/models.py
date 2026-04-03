@@ -1,9 +1,8 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class StructuralNesting:
-    max_nesting: int
+class StructuralNesting(BaseModel):
+    max: int
+    mean: float | None
     total_nesting: int
     total_statements: int
-    average_nesting: float | None

@@ -1,7 +1,7 @@
 import ast
 
 from core.analysis.base import BaseVisitor
-from core.analysis.models import MetricName
+from core.analysis.enums import MetricName
 from core.analysis.structural_nesting.models import StructuralNesting
 
 
@@ -58,12 +58,12 @@ class StructuralNestingVisitor(BaseVisitor):
     def compute_results(self) -> StructuralNesting:
         if self.total_statements == 0:
             return StructuralNesting(
-                max_nesting=0, total_nesting=0, total_statements=0, average_nesting=None
+                total_nesting=0, total_statements=0, max=0, mean=None
             )
 
         return StructuralNesting(
-            max_nesting=self.max_nesting,
             total_nesting=self.total_nesting,
             total_statements=self.total_statements,
-            average_nesting=self.total_nesting / self.total_statements,
+            max=self.max_nesting,
+            mean=self.total_nesting / self.total_statements,
         )

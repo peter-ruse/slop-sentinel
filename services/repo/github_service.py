@@ -3,8 +3,9 @@ from io import BytesIO
 
 import httpx
 
-from services.base import RepoService
-from services.models import GitHubRepo
+from core.config import github_settings
+from services.repo.base import RepoService
+from services.repo.models import GitHubRepo
 
 
 class GitHubService(RepoService[GitHubRepo]):
@@ -61,3 +62,11 @@ class GitHubService(RepoService[GitHubRepo]):
                 )
                 response.raise_for_status()
                 return BytesIO(response.content)
+
+
+github_service = GitHubService(
+    github_settings.api_base_url,  # type: ignore
+    token=github_settings.raw_token,
+    per_page=github_settings.per_page,
+    max_parallel=github_settings.max_parallel,
+)
