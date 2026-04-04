@@ -29,6 +29,7 @@ app = FastAPI(
     title="Slop Sentinel",
     swagger_ui_parameters={"displayRequestDuration": True},
     lifespan=lifespan,
+    docs_url="/",
 )
 app.include_router(ingestion_router)
 app.include_router(analysis_router)
