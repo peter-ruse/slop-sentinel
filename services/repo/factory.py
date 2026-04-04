@@ -13,12 +13,12 @@ class RepoServiceFactory:
     def get_service_from_url(cls, url: str) -> tuple[RepoService[Any], Repo]:
         domain = urlparse(url).netloc.lower().removeprefix("www.")
         match domain:
-            case "github.com":
-                github_repo = GitHubRepo.from_web_url(url, github_settings.api_base_url)  # type: ignore
+            case str() if "github.com" in domain:
+                github_repo = GitHubRepo.from_url(url, github_settings.api_base_url)  # type: ignore
                 return github_service, github_repo
-            case "bitbucket.org":
+            case str() if "bitbucket.org" in domain:
                 raise NotImplementedError("Bitbucket service not implemented yet")
-            case "gitlab.com":
+            case str() if "gitlab.com" in domain:
                 raise NotImplementedError("GitLab service not implemented yet")
             case _:
                 raise ValueError(f"Unrecognized domain {domain}")
