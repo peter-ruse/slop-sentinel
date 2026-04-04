@@ -11,12 +11,5 @@ class RedisService(metaclass=SingletonMeta):
     @property
     def client(self):
         if not self._client:
-            self._client = Redis(
-                host=redis_settings.host,
-                port=redis_settings.port,
-                db=redis_settings.db,
-                password=redis_settings.raw_password,
-                socket_timeout=redis_settings.socket_timeout,
-                socket_connect_timeout=redis_settings.socket_connect_timeout,
-            )
+            self._client = Redis.from_url(redis_settings.raw_url)
         return self._client

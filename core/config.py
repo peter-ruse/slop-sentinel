@@ -27,18 +27,11 @@ class GitHubSettings(BaseSettings):
 
 
 class RedisSettings(BaseSettings):
-    host: str = Field(default="localhost", validation_alias="REDIS_HOST")
-    port: int = Field(default=6379, validation_alias="REDIS_PORT")
-    db: int = Field(default=0, validation_alias="REDIS_DB")
-    password: SecretStr = Field(validation_alias="REDIS_PASSWORD")
-    socket_timeout: float = Field(default=5.0, validation_alias="REDIS_SOCKET_TIMEOUT")
-    socket_connect_timeout: float = Field(
-        default=5.0, validation_alias="REDIS_SOCKET_CONNECT_TIMEOUT"
-    )
+    url: SecretStr = Field(validation_alias="REDIS_URL")
 
     @property
-    def raw_password(self):
-        return self.password.get_secret_value()
+    def raw_url(self):
+        return self.url.get_secret_value()
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
