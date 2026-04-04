@@ -45,7 +45,7 @@ class RedisSettings(BaseSettings):
 
 class PostgreSQLSettings(BaseSettings):
     user: str = Field(validation_alias="POSTGRES_USER")
-    password: str = Field(validation_alias="POSTGRES_PASSWORD")
+    password: SecretStr = Field(validation_alias="POSTGRES_PASSWORD")
     host: str = Field(default="db", validation_alias="POSTGRES_HOST")
     port: int = Field(default=5432, validation_alias="POSTGRES_PORT")
     db: str = Field(validation_alias="POSTGRES_DB")
