@@ -18,7 +18,7 @@ class Database(metaclass=SingletonMeta):
         if not self.pool:
             try:
                 self.pool = await asyncpg.create_pool(
-                    dsn=postgresql_settings.url,
+                    dsn=postgresql_settings.raw_url,
                     min_size=5,
                     max_size=20,
                     command_timeout=60,
