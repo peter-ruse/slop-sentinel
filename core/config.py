@@ -45,14 +45,11 @@ class RedisSettings(BaseSettings):
 
 class PostgreSQLSettings(BaseSettings):
     user: str = Field(validation_alias="POSTGRES_USER")
-    password: str = Field(validation_alias="POSTGRES_PASSWORD")
+    password: SecretStr = Field(validation_alias="POSTGRES_PASSWORD")
     host: str = Field(default="db", validation_alias="POSTGRES_HOST")
     port: int = Field(default=5432, validation_alias="POSTGRES_PORT")
     db: str = Field(validation_alias="POSTGRES_DB")
-
-    @property
-    def url(self) -> str:
-        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+    url: SecretStr = Field(validation_alias="POSTGRES_URL")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
