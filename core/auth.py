@@ -19,8 +19,7 @@ def password_correct(password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(data: dict):
-    to_encode = data.copy()
-    to_encode.update({"exp": datetime.now(timezone.utc) + timedelta(minutes=30)})
+    to_encode = data | {"exp": datetime.now(timezone.utc) + timedelta(minutes=30)}
     encoded_jwt = jwt.encode(
         to_encode, key=jwt_settings.raw_secret_key, algorithm=ALGORITHM
     )
